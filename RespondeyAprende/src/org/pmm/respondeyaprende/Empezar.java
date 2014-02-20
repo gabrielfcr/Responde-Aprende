@@ -10,20 +10,31 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Empezar extends Activity {
 	private ProgressBar progressBar;
+	private Button bt1, bt2, bt3, bt4;
+	private TextView txtPregunta;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_empezar);
 		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
+		bt1 = (Button)findViewById(R.id.btRespuesta1);
+		bt2 = (Button)findViewById(R.id.btRespuesta2);
+		bt3 = (Button)findViewById(R.id.btRespuesta3);
+		bt4 = (Button)findViewById(R.id.btRespuesta4);
+		txtPregunta = (TextView)findViewById(R.id.tvPregunta);
+		
 		if (!comprobarBD()) {
 			copiarBD();
 		}
+		
 		
 	}
 
@@ -63,10 +74,7 @@ public class Empezar extends Activity {
 		db.close();
 
 	}
-	public class Hilo extends AsyncTask<Void, Integer, Void>{
-		
-		
-
+	public class Hilo extends AsyncTask<Void, Integer, Void>{				
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
