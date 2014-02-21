@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -28,18 +29,17 @@ public class Empezar extends Activity {
 	// Variables primitivas
 	private int numeroPregunta = 0, progress = 0;
 	
-
 	// Variables de Android
 	private ProgressBar progressBar;
 	private Button bt1, bt2, bt3, bt4;
 	private TextView txtPregunta;
 	private ArrayList<Preguntas> listaPreguntas = new ArrayList<Preguntas>();
-	private Hilo hilo;
+	private UpdateProgress hilo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// Pedimos al sistema de ventanas de Android que nos quite el nombre de
-		// la aplicación y que además oculte la barra de notificaciones.
+		// la aplicación y que además ocul	te la barra de notificaciones.
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -60,9 +60,8 @@ public class Empezar extends Activity {
 
 		listaPreguntas = leerBD();
 		insertarPregunta();
-		hilo = new Hilo();
+		hilo = new UpdateProgress();
 		hilo.execute();
-
 			
 		bt1.setOnClickListener(new OnClickListener() {
 
@@ -107,6 +106,7 @@ public class Empezar extends Activity {
 	public void insertarPregunta() {
 		Preguntas preguntas = listaPreguntas.get(numeroPregunta);
 		txtPregunta.setText(preguntas.getPregunta());
+		txtPregunta.setTextColor(Color.WHITE);
 		bt1.setText(preguntas.getRespuestas()[0]);
 		bt2.setText(preguntas.getRespuestas()[1]);
 		bt3.setText(preguntas.getRespuestas()[2]);
@@ -184,6 +184,7 @@ public class Empezar extends Activity {
 	public Dialog onCreateDialog(int id) {
 		AlertDialog dialogo;
 		AlertDialog.Builder builder = new AlertDialog.Builder(Empezar.this);
+//		hilo.cancel(true);
 		hilo.cancel(true);
 		switch (id) {
 		case 1:
@@ -197,7 +198,10 @@ public class Empezar extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							numeroPregunta++;
 							recorrerLista();
-							
+							if(numeroPregunta != listaPreguntas.size()){
+								hilo = new UpdateProgress();
+								hilo.execute();
+							}
 						}
 					});
 			break;
@@ -211,8 +215,10 @@ public class Empezar extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							numeroPregunta++;
 							recorrerLista();
-							hilo = new Hilo();
-							hilo.execute();
+							if(numeroPregunta != listaPreguntas.size()){
+								hilo = new UpdateProgress();
+								hilo.execute();
+							}
 						}
 					});
 			break;
@@ -227,7 +233,7 @@ public class Empezar extends Activity {
 							numeroPregunta++;
 							recorrerLista();
 							if(numeroPregunta != listaPreguntas.size()){
-								hilo = new Hilo();
+								hilo = new UpdateProgress();
 								hilo.execute();
 							}
 						}
@@ -271,7 +277,6 @@ public class Empezar extends Activity {
 			int c;
 			while ((c = in.read()) != -1) {
 				out.write(c);
-
 			}
 			in.close();
 			out.close();
@@ -304,53 +309,57 @@ public class Empezar extends Activity {
 		db.close();
 		return lista;
 	}
+	//Hilo secundario para controlar el progressBar
+    public class UpdateProgress extends AsyncTask<Void,Integer,Void>{
+    	// Tiene que ser interna ya que necesito métodos de la clase Activity (herencia múltiple)
+    	
+    	@Override
+    	protected void onCancelled() {
+    		Toast.makeText(Empezar.this, "Tarea cancelada!", Toast.LENGTH_SHORT).show();
+    	}
 
-	// Hilo para correr la barra de progreso
-	public class Hilo extends AsyncTask<Void, Integer, Void> {
-		boolean continuar = true;
-
-		public void continuar(boolean cont) {
-			this.continuar = cont;
-		}
-
-		public int puntuacion() {
-			int punt = 100 - progress;
-			return punt;
+		@Override
+		protected void onPostExecute(Void result) {
+			// Una vez que el proceso haya terminado, el botón podrá 
+			// ser presionado nuevamente después de cambiar su atributo clickable.
+			onCreateDialog(3).show();
+			Toast.makeText(Empezar.this, "Tarea terminada!", Toast.LENGTH_SHORT).show();
+			
 		}
 
 		@Override
 		protected void onPreExecute() {
-			progress = 0;
-		}
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			while (progress < 100 && continuar && !isCancelled()) {
-				Log.d("PROGRESSBAR", String.valueOf(progress));
-				progress++;
-				publishProgress(progress);
-
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			return null;
+			// Definimos el progreso de la barra en 0 para empezar.
+			progress=0;
+			
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
+			// Actualiza la ProgressBar
+			// Se invoca una vez después de una llamada a publishProgress(progress)
 			progressBar.setProgress(values[0]);
 		}
 
-		protected void onPostExecute(Void result) {
-			onCreateDialog(3).show();
-			Toast.makeText(getApplicationContext(), "El hilo ha finalizado",
-					Toast.LENGTH_LONG).show();
-		}
-
-	}
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			/*
+			 *  En este método definimos la forma en la que estará avanzando la ProgressBar,
+			 *  para lo cual nos auxiliamos de la clase SystemClock, y para cada vez que 
+			 *  nuestra variable progress aumente se actualice su avance en el UI thread.
+			 */
+			while(progress<100){
+				progress++;
+				publishProgress(progress);
+				// ahora pasa a realizar el onProgressUpdate
+				SystemClock.sleep(100); // duerme el proceso 100 milisegundos
+				if(isCancelled()){
+					break;
+				}
+			}
+			return null;
+		}	
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -359,4 +368,10 @@ public class Empezar extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onPause() {
+		hilo.cancel(true);
+		super.onPause();
+	}
+	
 }
