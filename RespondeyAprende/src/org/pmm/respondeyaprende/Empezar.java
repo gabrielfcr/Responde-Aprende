@@ -3,11 +3,7 @@ package org.pmm.respondeyaprende;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,8 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -66,8 +60,8 @@ public class Empezar extends Activity {
 
 		listaPreguntas = leerBD();
 		insertarPregunta();
-//		hilo = new Hilo();
-//		hilo.execute();
+		hilo = new Hilo();
+		hilo.execute();
 
 			
 		bt1.setOnClickListener(new OnClickListener() {
@@ -75,7 +69,6 @@ public class Empezar extends Activity {
 			@Override
 			public void onClick(View v) {
 				respuesta(1);
-
 			}
 		});
 		bt2.setOnClickListener(new OnClickListener() {
@@ -83,7 +76,6 @@ public class Empezar extends Activity {
 			@Override
 			public void onClick(View v) {
 				respuesta(2);
-
 			}
 		});
 		bt3.setOnClickListener(new OnClickListener() {
@@ -91,7 +83,6 @@ public class Empezar extends Activity {
 			@Override
 			public void onClick(View v) {
 				respuesta(3);
-
 			}
 		});
 		bt4.setOnClickListener(new OnClickListener() {
@@ -99,7 +90,6 @@ public class Empezar extends Activity {
 			@Override
 			public void onClick(View v) {
 				respuesta(4);
-
 			}
 		});
 	}
@@ -194,7 +184,7 @@ public class Empezar extends Activity {
 	public Dialog onCreateDialog(int id) {
 		AlertDialog dialogo;
 		AlertDialog.Builder builder = new AlertDialog.Builder(Empezar.this);
-
+		hilo.cancel(true);
 		switch (id) {
 		case 1:
 			builder.setTitle("Acertaste");
@@ -207,7 +197,7 @@ public class Empezar extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							numeroPregunta++;
 							recorrerLista();
-
+							
 						}
 					});
 			break;
@@ -221,6 +211,8 @@ public class Empezar extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							numeroPregunta++;
 							recorrerLista();
+							hilo = new Hilo();
+							hilo.execute();
 						}
 					});
 			break;
@@ -234,6 +226,10 @@ public class Empezar extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							numeroPregunta++;
 							recorrerLista();
+							if(numeroPregunta != listaPreguntas.size()){
+								hilo = new Hilo();
+								hilo.execute();
+							}
 						}
 					});
 			break;
@@ -251,7 +247,6 @@ public class Empezar extends Activity {
 			break;
 
 		}
-
 		return dialogo = builder.create();
 
 	}
@@ -331,7 +326,7 @@ public class Empezar extends Activity {
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			while (progress < 100 && continuar && !isCancelled()) {
-
+				Log.d("PROGRESSBAR", String.valueOf(progress));
 				progress++;
 				publishProgress(progress);
 
@@ -350,6 +345,7 @@ public class Empezar extends Activity {
 		}
 
 		protected void onPostExecute(Void result) {
+			onCreateDialog(3).show();
 			Toast.makeText(getApplicationContext(), "El hilo ha finalizado",
 					Toast.LENGTH_LONG).show();
 		}
