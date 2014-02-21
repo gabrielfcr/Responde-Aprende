@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -13,11 +15,16 @@ public class Principal extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// Pedimos al sistema de ventanas de Android que nos quite el nombre de
+		// la aplicación y que además oculte la barra de notificaciones.
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_principal);
-		btEmpezar = (Button)findViewById(R.id.empezar);
+		btEmpezar = (Button) findViewById(R.id.empezar);
 		btEmpezar.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), Empezar.class);

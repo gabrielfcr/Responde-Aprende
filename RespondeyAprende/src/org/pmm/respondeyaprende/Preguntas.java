@@ -3,12 +3,11 @@ package org.pmm.respondeyaprende;
 public class Preguntas {
 	private String categoria;
 	private String pregunta;
-	private String[] respuestas;
+	String[] respuestas;
 	private int respuestaCorrecta;
 	private int respuestaAyuda;
 
-	public Preguntas(String categoria, String pregunta, String[] respuestas,
-			int respuestaCorrecta, int respuestaAyuda) {
+	public Preguntas(String categoria, String pregunta, String[] respuestas,int respuestaCorrecta, int respuestaAyuda) {
 		this.categoria = categoria;
 		this.pregunta = pregunta;
 		this.respuestas = respuestas;
