@@ -90,6 +90,9 @@ public class GuardarPreguntas extends Activity {
 							"Faltan campos por rrellenar", Toast.LENGTH_LONG)
 							.show();
 				} else {
+					if(categoria.equals("Selecciona una Categoria")){
+						categoria = "Lengua";
+					}
 					insertarDatos(categoria, pregunta, respuestaCorrecta, respuesta1, respuesta2, respuesta3);
 					finish();
 				}
@@ -147,6 +150,7 @@ public class GuardarPreguntas extends Activity {
 		SQLiteDatabase db = this.openOrCreateDatabase("bdEstudiar.db",
 				MODE_PRIVATE, null);
 		Cursor c1 = db.rawQuery("select categoria from Preguntas", null);
+		lista.add("Selecciona una Categoria");
 		while (c1.moveToNext()) {
 			if (!lista.contains(c1.getString(0))) {
 				lista.add(c1.getString(0));
