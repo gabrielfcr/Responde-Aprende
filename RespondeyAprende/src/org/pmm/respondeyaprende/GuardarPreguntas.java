@@ -64,9 +64,6 @@ public class GuardarPreguntas extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 					android.view.View v, int position, long id) {
-				Toast.makeText(getApplicationContext(),
-						String.valueOf(datos.get(position)), Toast.LENGTH_LONG)
-						.show();
 				categoria = datos.get(position);
 			}
 
@@ -94,9 +91,6 @@ public class GuardarPreguntas extends Activity {
 							.show();
 				} else {
 					insertarDatos(categoria, pregunta, respuestaCorrecta, respuesta1, respuesta2, respuesta3);
-					Toast.makeText(getApplicationContext(),
-							"Todos los campos estan completos",
-							Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}

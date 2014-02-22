@@ -315,7 +315,7 @@ public class Empezar extends Activity {
     	
     	@Override
     	protected void onCancelled() {
-    		Toast.makeText(Empezar.this, "Tarea cancelada!", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(Empezar.this, "Tarea cancelada!", Toast.LENGTH_SHORT);
     	}
 
 		@Override
@@ -323,7 +323,7 @@ public class Empezar extends Activity {
 			// Una vez que el proceso haya terminado, el botón podrá 
 			// ser presionado nuevamente después de cambiar su atributo clickable.
 			onCreateDialog(3).show();
-			Toast.makeText(Empezar.this, "Tarea terminada!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(Empezar.this, "Tarea terminada!", Toast.LENGTH_SHORT);
 			
 		}
 
