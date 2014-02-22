@@ -240,8 +240,8 @@ public class Empezar extends Activity {
 					});
 			break;
 		case 4:
-			builder.setTitle("Fin");
-			builder.setMessage("Tu puntuación es: ");
+			builder.setTitle("Ha finalizado la partida");
+			builder.setMessage("Inserta mas preguntas y demuestra lo que vales.");
 			builder.setCancelable(false);
 			builder.setPositiveButton("OK",
 					new DialogInterface.OnClickListener() {

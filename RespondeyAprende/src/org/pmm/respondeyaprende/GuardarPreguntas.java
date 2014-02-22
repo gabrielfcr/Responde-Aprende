@@ -95,6 +95,17 @@ public class GuardarPreguntas extends Activity {
 				}
 			}
 		});
+		btBorrar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				etPregunta.setText("");
+				etRespuestaCorrecta.setText("");
+				etRespuesta1.setText("");
+				etRespuesta2.setText("");
+				etRespuesta3.setText("");	
+			}
+		});
 
 	}
 
