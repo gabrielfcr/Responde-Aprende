@@ -10,4 +10,11 @@
     <string name="cargarPreguntas">Escribir Preguntas</string>
     <string name="palabraVacia"></string>
     <string name="salir">Salir</string>
+    <string name="title_activity_guardar_preguntas">GuardarPreguntas</string>
+    <string name="categoria">Categoria</string>
+    <string name="pregunta">Pregunta</string>
+    <string name="respuesta_correcta">Respuesta Correcta</string>
+    <string name="respuesta_aleatoria">Respuesta Aleatoria</string>
+    <string name="borrarr">Borrar</string>
+    <string name="guardar">Guardar</string>
 </resources>

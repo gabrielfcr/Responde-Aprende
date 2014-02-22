@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class Principal extends Activity {
-	private Button btEmpezar;
+	private Button btEmpezar, btGuardarPreguntas, btFinalizar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +23,28 @@ public class Principal extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_principal);
 		btEmpezar = (Button) findViewById(R.id.empezar);
+		btGuardarPreguntas = (Button)findViewById(R.id.btCargaListaPregunta);
+		btFinalizar = (Button)findViewById(R.id.btSalir);
 		btEmpezar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), Empezar.class);
 				startActivity(i);
+			}
+		});
+		btGuardarPreguntas.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getApplicationContext(), GuardarPreguntas.class);
+				startActivity(i);
+			}
+		});
+		btFinalizar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();	
 			}
 		});
 	}
