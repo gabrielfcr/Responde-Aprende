@@ -30,6 +30,7 @@
         </activity>
         <activity
             android:name="org.pmm.respondeyaprende.GuardarPreguntas"
+            android:screenOrientation="portrait" 
             android:label="@string/title_activity_guardar_preguntas" >
         </activity>
     </application>
